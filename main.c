@@ -296,7 +296,7 @@ int main(void)
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), NULL);
 	glEnableVertexAttribArray(0);
 
-	vec3 camera_pos = make_vec3(0, 0, 5);
+	vec3 camera_pos = make_vec3(1, 1, 1);
 	vec2 prev_mouse_pos = get_mouse_pos(window);
 	float pitch = 0;
 	float yaw = 0;
@@ -344,8 +344,17 @@ int main(void)
 			camera_pos = sub3(camera_pos, mulf3(camera_right, speed));
 		}
 
+		if (glfwGetKey(window, GLFW_KEY_Q)) {
+			camera_pos.y -= speed;
+		}
+
+		if (glfwGetKey(window, GLFW_KEY_E)) {
+			camera_pos.y += speed;
+		}
+
 		// Get the view matrix
-		mat4 view = look_at(camera_pos, add3(camera_pos, camera_dir), make_vec3(0, 1, 0));
+		vec3 target = add3(camera_pos, camera_dir);
+		mat4 view = look_at(camera_pos, target, make_vec3(0, 1, 0));
 		glUniformMatrix4fv(glGetUniformLocation(program, "view"), 1, GL_FALSE, (float *)view.e);
 
 		glClear(GL_COLOR_BUFFER_BIT);
